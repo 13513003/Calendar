@@ -31,4 +31,9 @@ public class Party extends Event {
     public void setSubject(String newsubject) {
         subject = newsubject;
     }
+    @Override
+    public void printEvent(){
+        System.out.print(eventName+" "+eventLocation+" "+eventTime+" "+subject+" "+dresscode);
+        System.out.println("");
+    }
 }

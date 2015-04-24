@@ -4,9 +4,9 @@ package Calender;
  * Created by user on 4/22/2015.
  */
 public class Event {
-    private String eventName;
-    private String eventLocation;
-    private String eventTime;
+    protected String eventName;
+    protected String eventLocation;
+    protected String eventTime;
     public Event(){
         eventName = "";
         eventLocation = "";
@@ -41,5 +41,10 @@ public class Event {
 
     public void setEventTime(String eventTime) {
         this.eventTime = eventTime;
+    }
+
+    public void printEvent(){
+        System.out.print(eventName+" "+eventLocation+" "+eventTime);
+        System.out.println("");
     }
 }

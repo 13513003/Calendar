@@ -80,7 +80,7 @@ class CalendarModel extends AbstractTableModel {
     private String[][] calendar;
 
     public CalendarModel() {
-        Day[][][] day = new Day[years.length][months.length][32];
+        day = new Day[years.length][months.length][32];
         calendar = new String[7][7];
         for (int i = 0; i < days.length; i++)
             calendar[0][i] = days[i];
@@ -90,12 +90,14 @@ class CalendarModel extends AbstractTableModel {
                     day[i][j][k] = new Day();
             }
         }
+        init();
     }
 
     public void init(){
         String line;
         String delims = "[-]+";
         String[] tokens;
+        Day tempday = new Day();
         try(BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\user\\IdeaProjects\\Calendar\\input.txt"))) {
             line = br.readLine();
             if(line != null){
@@ -105,6 +107,7 @@ class CalendarModel extends AbstractTableModel {
                     int tokenyear = 0;
                     int tokenmonth = 0 ;
                     int tokenday = 0;
+                    int tokendaybefore = 0;
                     for (int j = 0; j < tokens.length; j++) {
                         switch(j){
                             case 0 :tokenyear = Integer.parseInt(tokens[j])-Integer.parseInt(years[0]);
@@ -117,13 +120,15 @@ class CalendarModel extends AbstractTableModel {
                         if(j == 3){
                             if(tokens[j].equals("Party")) {
                                 Event tokenevent = new Party(tokens[j + 1], tokens[j + 2], tokens[j + 3], tokens[j + 4], tokens[j + 5]);
-                                Day tempday = new Day();
+                                if(tokendaybefore != tokenday)
+                                    tempday = new Day();
                                 tempday.addEvent(tokenevent);
                                 day[tokenyear][tokenmonth][tokenday] =  tempday;
                             }
                             else if(tokens[j].equals("Meeting")){
                                 //donothing
                             }
+                            tokendaybefore = tokenday;
                             break;
                         }
                     }
@@ -132,6 +137,13 @@ class CalendarModel extends AbstractTableModel {
         }
         catch (IOException e){
             //System.out.println("File I/O error!");
+        }
+        for (int i = 0; i < years.length; i++) {
+            for (int j = 0; j < months.length; j++) {
+                for (int k = 0; k < numDays[j]; ++k) {
+                    day[i][j][k].printDay();
+                }
+            }
         }
     }
 

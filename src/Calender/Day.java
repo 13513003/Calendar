@@ -22,4 +22,10 @@ public class Day {
     public Event getEvent(int i){
         return event.get(i);
     }
+
+    public void printDay(){
+        for(int i=0; i<event.size();i++){
+            event.get(i).printEvent();
+        }
+    }
 }
