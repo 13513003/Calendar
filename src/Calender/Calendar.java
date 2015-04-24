@@ -27,6 +27,8 @@ public class Calendar extends JFrame {
     CalendarModel model = new CalendarModel();
 
     JTable table = new JTable(model);
+    
+    ClockPanel clockPanel = new ClockPanel();
 
     public Calendar() {
         super();
@@ -45,10 +47,12 @@ public class Calendar extends JFrame {
         table.setGridColor(Color.black);
         table.setShowGrid(true);
         getContentPane().add(table);
+        clockPanel.setBounds(10, 350, 200, 200);
+        getContentPane().add(clockPanel);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        setSize(500, 500);
+        setSize(500, 700);
         setVisible(true);
     }
 
