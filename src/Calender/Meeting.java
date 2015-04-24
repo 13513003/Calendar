@@ -8,8 +8,12 @@ import java.util.ArrayList;
 public class Meeting extends Event {
     private ArrayList<String> participant;
     private String subject;
-    public Meeting(String Name, String Location,ArrayList<String> newparticipant, String newsubject){
-        super(Name,Location);
+    public Meeting(){
+        subject = "";
+        participant = new ArrayList<String>();
+    }
+    public Meeting(String Name, String Location,String Time,ArrayList<String> newparticipant, String newsubject){
+        super(Name,Location,Time);
         participant = new ArrayList<String>(newparticipant);
         subject = newsubject;
     }

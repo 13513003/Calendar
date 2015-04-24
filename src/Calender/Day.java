@@ -6,19 +6,20 @@ import java.util.ArrayList;
  * Created by user on 4/22/2015.
  */
 public class Day {
-    private ArrayList<Time> time;
+    private ArrayList<Event> event;
+
     public Day(){
-        time = new ArrayList<Time>();
+        event = new ArrayList<Event>();
     }
-    public Day(ArrayList<Time> newtime){
-        time = new ArrayList<Time>(newtime);
-    }
-
-    public void addTime(Time T){
-        time.add(T);
+    public Day(ArrayList<Event> newevent){
+        event = new ArrayList<Event>(newevent);
     }
 
-    public Time getTime(int i){
-        return time.get(i);
+    public void addEvent(Event E){
+        event.add(E);
+    }
+
+    public Event getEvent(int i){
+        return event.get(i);
     }
 }

@@ -2,15 +2,186 @@ package Calender;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
-public class Calendar{
-    /*private ArrayList<Day> days;
+public class Calendar extends JFrame {
+    String[] years = { "2015", "2016", "2017" };
+
+    JComboBox comboBox = new JComboBox(years);
+
+    String[] months = { "January", "February", "March", "April", "May", "June", "July", "August",
+            "September", "October", "November", "December" };
+
+    JList list = new JList(months);
+
+    JScrollPane scrollPane = new JScrollPane(list);
+
+    CalendarModel model = new CalendarModel();
+
+    JTable table = new JTable(model);
+
+    public Calendar() {
+        super();
+
+        getContentPane().setLayout(null);
+        comboBox.setBounds(10, 10, 100, 30);
+        comboBox.setSelectedIndex(0);
+        comboBox.addItemListener(new ComboHandler());
+        scrollPane.setBounds(200, 10, 150, 100);
+        list.setSelectedIndex(3);
+        list.addListSelectionListener(new ListHandler());
+        table.setBounds(10, 150, 550, 200);
+        model.setMonth(Integer.parseInt(comboBox.getSelectedItem().toString()), list.getSelectedIndex());
+        getContentPane().add(comboBox);
+        getContentPane().add(scrollPane);
+        table.setGridColor(Color.black);
+        table.setShowGrid(true);
+        getContentPane().add(table);
+
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        setSize(500, 500);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        Calendar app = new Calendar();
+    }
+    public class ComboHandler implements ItemListener {
+        public void itemStateChanged(ItemEvent e) {
+            model.setMonth(Integer.parseInt(comboBox.getSelectedItem().toString()), list.getSelectedIndex());
+            //System.out.println(comboBox.getSelectedItem());
+            table.repaint();
+        }
+    }
+
+    public class ListHandler implements ListSelectionListener {
+        public void valueChanged(ListSelectionEvent e) {
+            model.setMonth(Integer.parseInt(comboBox.getSelectedItem().toString()), list.getSelectedIndex());
+            table.repaint();
+        }
+    }
+}
+class CalendarModel extends AbstractTableModel {
+    private Day[][][] day;
+    private String[] days = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+    private int[] numDays = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    private String[] months = { "January", "February", "March", "April", "May", "June", "July", "August",
+            "September", "October", "November", "December" };
+    private String[] years = { "2015", "2016", "2017" };
+    private String[][] calendar;
+
+    public CalendarModel() {
+        Day[][][] day = new Day[years.length][months.length][32];
+        calendar = new String[7][7];
+        for (int i = 0; i < days.length; i++)
+            calendar[0][i] = days[i];
+        for (int i = 0; i < years.length; i++) {
+            for (int j = 0; j < months.length; j++) {
+                for (int k = 0; k < numDays[j]; ++k)
+                    day[i][j][k] = new Day();
+            }
+        }
+    }
+
+    public void init(){
+        String line;
+        String delims = "[-]+";
+        String[] tokens;
+        try(BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\user\\IdeaProjects\\Calendar\\input.txt"))) {
+            line = br.readLine();
+            if(line != null){
+                //tokens = line.split(delims);
+                do {
+                    tokens = line.split(delims);
+                    int tokenyear = 0;
+                    int tokenmonth = 0 ;
+                    int tokenday = 0;
+                    for (int j = 0; j < tokens.length; j++) {
+                        switch(j){
+                            case 0 :tokenyear = Integer.parseInt(tokens[j])-Integer.parseInt(years[0]);
+                                    break;
+                            case 1 :tokenmonth = Integer.parseInt(tokens[j])-1;
+                                    break;
+                            case 2 :tokenday = Integer.parseInt(tokens[j])-1;
+                                    break;
+                        }
+                        if(j == 3){
+                            if(tokens[j].equals("Party")) {
+                                Event tokenevent = new Party(tokens[j + 1], tokens[j + 2], tokens[j + 3], tokens[j + 4], tokens[j + 5]);
+                                Day tempday = new Day();
+                                tempday.addEvent(tokenevent);
+                                day[tokenyear][tokenmonth][tokenday] =  tempday;
+                            }
+                            else if(tokens[j].equals("Meeting")){
+                                //donothing
+                            }
+                            break;
+                        }
+                    }
+                }while ((line = br.readLine()) != null);
+            }
+        }
+        catch (IOException e){
+            //System.out.println("File I/O error!");
+        }
+    }
+
+    public int getRowCount() {
+        return 7;
+    }
+
+    public int getColumnCount() {
+        return 7;
+    }
+
+    public Object getValueAt(int row, int column) {
+        return calendar[row][column];
+    }
+
+    public void setValueAt(Object value, int row, int column) {
+        calendar[row][column] = (String) value;
+    }
+
+    public void setMonth(int year, int month) {
+        for (int i = 1; i < 7; ++i)
+            for (int j = 0; j < 7; ++j)
+                calendar[i][j] = " ";
+        java.util.GregorianCalendar cal = new java.util.GregorianCalendar();
+        cal.set(year, month, 1);
+        int offset = cal.get(java.util.GregorianCalendar.DAY_OF_WEEK) - 1;
+        offset += 7;
+        int num = daysInMonth(year, month);
+        //day[month] = new ArrayList<Day>();
+        for (int i = 0; i < num; ++i) {
+            calendar[offset / 7][offset % 7] = Integer.toString(i + 1);
+            ++offset;
+        }
+    }
+
+    public boolean isLeapYear(int year) {
+        if (year % 4 == 0)
+            return true;
+        return false;
+    }
+
+    public int daysInMonth(int year, int month) {
+        int days = numDays[month];
+        if (month == 1 && isLeapYear(year))
+            ++days;
+        return days;
+    }
+}
+/*public class Calendar{
+    private ArrayList<Day> days;
     public Calendar(){
         days = new ArrayList<Day>();
     }
@@ -24,7 +195,7 @@ public class Calendar{
 
     public Day getDay(int i){
         return days.get(i);
-    }*/
+    }
     String[] days = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
 
     int[] numDays = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
@@ -59,15 +230,22 @@ public class Calendar{
 
         Calendar c = new Calendar();
 
-        c.setMonth(2016,1);
+        c.setMonth(2015, 3);
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JTable table = new JTable(c.calendar, c.days);
+
         table.setCellSelectionEnabled(true);
         ListSelectionModel cellSelectionModel = table.getSelectionModel();
-        cellSelectionModel.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-
+        cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        MouseListener mouseListener = new MouseAdapter() {
+            public void mouseisClicked(MouseEvent mouseEvent) {
+                if (mouseEvent.getClickCount() == 2) {
+                    JOptionPane.showMessageDialog(null, "testing");
+                }
+            }
+        };
         cellSelectionModel.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
                 String selectedData = null;
@@ -89,123 +267,10 @@ public class Calendar{
         frame.setSize(300, 150);
         frame.setVisible(true);
     }
-}/*
-public class Calendar extends JFrame {
-    String[] years = { "2015", "2016", "2017" };
+}*/
 
-    JComboBox comboBox = new JComboBox(years);
 
-    String[] months = { "January", "February", "March", "April", "May", "June", "July", "August",
-            "September", "October", "November", "December" };
-
-    JList list = new JList(months);
-
-    JScrollPane scrollPane = new JScrollPane(list);
-
-    CalendarModel model = new CalendarModel();
-
-    JTable table = new JTable(model);
-
-    public Calendar() {
-        super();
-
-        getContentPane().setLayout(null);
-        comboBox.setBounds(10, 10, 100, 30);
-        comboBox.setSelectedIndex(0);
-        comboBox.addItemListener(new ComboHandler());
-        scrollPane.setBounds(200, 10, 150, 100);
-        list.setSelectedIndex(3);
-        list.addListSelectionListener(new ListHandler());
-        table.setBounds(10, 150, 550, 200);
-        model.setMonth(comboBox.getSelectedIndex()+1998, list.getSelectedIndex());
-        getContentPane().add(comboBox);
-        getContentPane().add(scrollPane);
-        table.setGridColor(Color.black);
-        table.setShowGrid(true);
-        getContentPane().add(table);
-
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        setSize(500, 500);
-        setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        Calendar app = new Calendar();
-    }
-    public class ComboHandler implements ItemListener {
-        public void itemStateChanged(ItemEvent e) {
-            model.setMonth(comboBox.getSelectedIndex()+1998, list.getSelectedIndex());
-            table.repaint();
-        }
-    }
-
-    public class ListHandler implements ListSelectionListener {
-        public void valueChanged(ListSelectionEvent e) {
-            model.setMonth(comboBox.getSelectedIndex()+1998, list.getSelectedIndex());
-            table.repaint();
-        }
-    }
-}
-class CalendarModel extends AbstractTableModel {
-    String[] days = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-
-    int[] numDays = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-
-    String[][] calendar = new String[7][7];
-
-    public CalendarModel() {
-        for (int i = 0; i < days.length; ++i)
-            calendar[0][i] = days[i];
-        for (int i = 1; i < 7; ++i)
-            for (int j = 0; j < 7; ++j)
-                calendar[i][j] = " ";
-    }
-
-    public int getRowCount() {
-        return 7;
-    }
-
-    public int getColumnCount() {
-        return 7;
-    }
-
-    public Object getValueAt(int row, int column) {
-        return calendar[row][column];
-    }
-
-    public void setValueAt(Object value, int row, int column) {
-        calendar[row][column] = (String) value;
-    }
-
-    public void setMonth(int year, int month) {
-        for (int i = 1; i < 7; ++i)
-            for (int j = 0; j < 7; ++j)
-                calendar[i][j] = " ";
-        java.util.GregorianCalendar cal = new java.util.GregorianCalendar();
-        cal.set(year, month, 1);
-        int offset = cal.get(java.util.GregorianCalendar.DAY_OF_WEEK) - 1;
-        offset += 7;
-        int num = daysInMonth(year, month);
-        for (int i = 0; i < num; ++i) {
-            calendar[offset / 7][offset % 7] = Integer.toString(i + 1);
-            ++offset;
-        }
-    }
-
-    public boolean isLeapYear(int year) {
-        if (year % 4 == 0)
-            return true;
-        return false;
-    }
-
-    public int daysInMonth(int year, int month) {
-        int days = numDays[month];
-        if (month == 1 && isLeapYear(year))
-            ++days;
-        return days;
-    }
-}*//*
+/*
         import java.awt.Color;
         import java.awt.Container;
         import java.awt.Dimension;

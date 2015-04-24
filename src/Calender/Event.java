@@ -6,9 +6,17 @@ package Calender;
 public class Event {
     private String eventName;
     private String eventLocation;
-    public Event(String Name, String Location){
+    private String eventTime;
+    public Event(){
+        eventName = "";
+        eventLocation = "";
+        eventTime = "";
+        System.out.println("b");
+    }
+    public Event(String Name, String Location, String Time){
         eventName = Name;
         eventLocation = Location;
+        eventTime = Time;
     }
 
     public void setEventName(String Name){
@@ -25,5 +33,13 @@ public class Event {
 
     public String getLocationName(){
         return eventLocation;
+    }
+
+    public String getEventTime() {
+        return eventTime;
+    }
+
+    public void setEventTime(String eventTime) {
+        this.eventTime = eventTime;
     }
 }

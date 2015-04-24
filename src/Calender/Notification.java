@@ -5,6 +5,9 @@ package Calender;
  */
 public class Notification {
     private Event notificationEvent;
+    public Notification(){
+        notificationEvent = new Event();
+    }
     public Notification(Event e){
         notificationEvent = e;
     }
