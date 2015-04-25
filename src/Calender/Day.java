@@ -23,9 +23,18 @@ public class Day {
         return event.get(i);
     }
 
+    public ArrayList<Event> getEvent(){
+        return event;
+    }
     public void printDay(){
         for(int i=0; i<event.size();i++){
             event.get(i).printEvent();
         }
+    }
+
+    public String toStringDay(int i){
+        String temp = new String();
+        temp = event.get(i).toStringEvent();
+        return temp;
     }
 }

@@ -12,7 +12,7 @@ public class Meeting extends Event {
         subject = "";
         participant = new ArrayList<String>();
     }
-    public Meeting(String Name, String Location,String Time,ArrayList<String> newparticipant, String newsubject){
+    public Meeting(String Name, String Location,String Time, String newsubject,ArrayList<String> newparticipant){
         super(Name,Location,Time);
         participant = new ArrayList<String>(newparticipant);
         subject = newsubject;
@@ -31,5 +31,22 @@ public class Meeting extends Event {
 
     public void setSubject(String newsubject) {
         subject = newsubject;
+    }
+    @Override
+    public void printEvent(){
+        String participants = new String();
+        for(String word : participant)
+            participants += word;
+        System.out.print(eventName+" "+eventLocation+" "+eventTime+" "+subject+" "+participants);
+        System.out.println("");
+    }
+    @Override
+    public String toStringEvent(){
+        String temp = new String();
+        String participants = new String();
+        for(String word : participant)
+            participants += word;
+        temp = eventTime+'\n'+eventName+'\n'+eventLocation+'\n'+subject+'\n'+participants;
+        return temp;
     }
 }

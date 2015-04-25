@@ -1,0 +1,7 @@
+2015`1`1`Party`Alex's Party`Kos Alex`10.30-11.30 AM`Alex's Birthday`Army Color`Don't Forget!
+2015`1`2`Party`BarQ Party`Ladang Jagung`11.00-12.00 AM`Iseng`Cowboy`Bring Sausage
+2015`1`4`Party`School Party`School`09.00-10.00 AM`Pesta Kelulusan`Putih Abu-Abu`Dateng
+2015`2`1`Party`Alex's Party`Kos Alex`10.30-11.30 AM`Alex's Birthday`Army Color`Don't Forget!
+2015`3`1`Party`Juan's Party`Kos Juan`09.30-10.30 AM`Juan's Birthday`Pastel Color`Don't Forget!
+2015`3`2`Party`School Party`School`09.00-10.00 AM`Pesta Kelulusan`Putih Abu-Abu`Dateng
+2015`4`2`Meeting`School Party`School`09.00-10.00 AM`Pesta Kelulusan`aku,kamu,dia`Dateng

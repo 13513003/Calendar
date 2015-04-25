@@ -36,4 +36,10 @@ public class Party extends Event {
         System.out.print(eventName+" "+eventLocation+" "+eventTime+" "+subject+" "+dresscode);
         System.out.println("");
     }
+    @Override
+    public String toStringEvent(){
+        String temp = new String();
+        temp = eventTime+'\n'+eventName+'\n'+eventLocation+'\n'+subject+'\n'+dresscode;
+        return temp;
+    }
 }

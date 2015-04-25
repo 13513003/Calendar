@@ -11,7 +11,6 @@ public class Event {
         eventName = "";
         eventLocation = "";
         eventTime = "";
-        System.out.println("b");
     }
     public Event(String Name, String Location, String Time){
         eventName = Name;
@@ -46,5 +45,11 @@ public class Event {
     public void printEvent(){
         System.out.print(eventName+" "+eventLocation+" "+eventTime);
         System.out.println("");
+    }
+
+    public String toStringEvent(){
+        String temp = new String();
+        temp = eventTime+'\n'+eventName+'\n'+eventLocation;
+        return temp;
     }
 }

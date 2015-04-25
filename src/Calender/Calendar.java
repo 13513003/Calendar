@@ -3,15 +3,15 @@ package Calender;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.*;
+import java.util.*;
+import java.util.Collections;
+import java.util.EventListener;
+import java.util.List;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
-
+import javax.swing.SpringLayout;
 public class Calendar extends JFrame {
     String[] years = { "2015", "2016", "2017" };
 
@@ -28,9 +28,11 @@ public class Calendar extends JFrame {
 
     JTable table = new JTable(model);
 
+    Clock clock = new Clock();
+
     public Calendar() {
         super();
-
+        setTitle("Calendar");
         getContentPane().setLayout(null);
         comboBox.setBounds(10, 10, 100, 30);
         comboBox.setSelectedIndex(0);
@@ -38,18 +40,293 @@ public class Calendar extends JFrame {
         scrollPane.setBounds(200, 10, 150, 100);
         list.setSelectedIndex(3);
         list.addListSelectionListener(new ListHandler());
-        table.setBounds(10, 150, 550, 200);
+        table.setBounds(10, 150, 470, 115);
         model.setMonth(Integer.parseInt(comboBox.getSelectedItem().toString()), list.getSelectedIndex());
         getContentPane().add(comboBox);
         getContentPane().add(scrollPane);
         table.setGridColor(Color.black);
         table.setShowGrid(true);
+        table.setCellSelectionEnabled(true);
+        ListSelectionModel cellSelectionModel = table.getSelectionModel();
+        cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         getContentPane().add(table);
+        clock.setBounds(300, 265, 200, 200);
+        getContentPane().add(clock);
+        table.addMouseListener(new MouseAdapter(){
+            public void mouseClicked(MouseEvent e){
+                int row=table.rowAtPoint(e.getPoint());
+                int col= table.columnAtPoint(e.getPoint());
+                JFrame dayFrame = new JFrame();
+                dayFrame.setTitle("Today's Events");
+                dayFrame.setVisible(true);
+                dayFrame.setContentPane(new eventLister(row, col));
+                dayFrame.pack();
+                System.out.println("Value in the cell clicked :" + " " + table.getValueAt(row, col).toString());
 
+            }
+        });
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        setSize(500, 500);
+        setSize(500, 350);
         setVisible(true);
+    }
+
+    public class eventLister extends JPanel implements ActionListener{
+
+        DefaultListModel listModel;
+        int row = 0;
+        int col = 0;
+
+        public eventLister(int selectedrow,int selectedcol){
+            row = selectedrow;
+            col = selectedcol;
+            listModel = new DefaultListModel();
+            setLayout(new BorderLayout());
+            JList listevent = new JList(listModel);
+            listevent.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+            listevent.setLayoutOrientation(JList.VERTICAL);
+
+            JScrollPane listScroller = new JScrollPane(listevent);
+            add(listScroller, BorderLayout.NORTH);
+            JButton addButton = new JButton("+");
+            add(addButton, BorderLayout.CENTER);
+            addButton.addActionListener(this);
+            listModel.addElement(table.getValueAt(row, col).toString() + " " + list.getSelectedValue() + " " + comboBox.getSelectedItem().toString());
+            for(int i=0; i<model.getDay()[Integer.parseInt(comboBox.getSelectedItem().toString()) - Integer.parseInt(years[0])][list.getSelectedIndex()][Integer.parseInt(table.getValueAt(row, col).toString()) - 1].getEvent().size();i++)
+                listModel.addElement(model.getDay()[Integer.parseInt(comboBox.getSelectedItem().toString()) - Integer.parseInt(years[0])][list.getSelectedIndex()][Integer.parseInt(table.getValueAt(row, col).toString()) - 1].toStringDay(i));
+        }
+        public void actionPerformed(ActionEvent evt){
+            eventAdder a = new eventAdder(row,col);
+        }
+    }
+
+    public class eventAdder extends JFrame implements ActionListener{
+        JPanel p;
+        String[] labels = {"Tanggal: ", "Pukul: ", "Nama Kegiatan: ", "Jenis Kegiatan: ", "Tempat: ", "Reminder:"};
+        int numPairs = labels.length;
+        String[] eventType = {"Party","Meeting"};
+        JComboBox combo = new JComboBox(eventType);
+        JTextField tanggalField;
+        JTextField pukulField;
+        JTextField namaField;
+        JTextField tempatField;
+        JTextField reminderField;
+        JTextField subjectField;
+        JTextField dresscodeField;
+        JTextField participantField;
+        JLabel label1;
+        JLabel label2;
+        JLabel label3;
+        int row = 0;
+        int col = 0;
+        public eventAdder(int selectedrow,int selectedcol){
+            row = selectedrow;
+            col = selectedcol;
+            p = new JPanel(new GridLayout(0, 1));
+            combo.setSelectedIndex(0);
+
+            tanggalField = new JTextField(table.getValueAt(row, col).toString() + "-" + list.getSelectedValue() + "-" + comboBox.getSelectedItem().toString());
+            pukulField = new JTextField(10);
+            namaField = new JTextField(10);
+            tempatField = new JTextField(10);
+            reminderField = new JTextField(10);
+
+            for (int i = 0; i < numPairs; i++) {
+                JLabel label = new JLabel(labels[i]);
+                p.add(label);
+                switch(i){
+                    case 0: label.setLabelFor(tanggalField);
+                        p.add(tanggalField);
+                        break;
+                    case 1: label.setLabelFor(pukulField);
+                        p.add(pukulField);
+                        break;
+                    case 2: label.setLabelFor(namaField);
+                        p.add(namaField);
+                        break;
+                    case 3: label.setLabelFor(combo);
+                        p.add(combo);
+                        break;
+                    case 4: label.setLabelFor(tempatField);
+                        p.add(tempatField);
+                        break;
+                    case 5: label.setLabelFor(reminderField);
+                        p.add(reminderField);
+                        break;
+                }
+            }
+            label1 = new JLabel("Subjek");
+            label2 = new JLabel("Dress Code");
+            subjectField = new JTextField(10);
+            dresscodeField = new JTextField(10);
+            p.add(label1);
+            label1.setLabelFor(subjectField);
+            p.add(subjectField);
+            p.add(label2);
+            label2.setLabelFor(dresscodeField);
+            p.add(dresscodeField);
+            combo.addActionListener(this);
+            p.setOpaque(true);
+            setTitle("Add an Event");
+            setContentPane(p);
+            JButton okButton = new JButton("OK");
+            add(okButton, BorderLayout.LINE_END);
+            setVisible(true);
+            okButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println(comboBox.getSelectedItem()
+                            + "`" + (list.getSelectedIndex()+1)
+                            + "`" + table.getValueAt(row, col)
+                            + "`" + combo.getSelectedItem()
+                            + "`" + namaField.getText()
+                            + "`" + tempatField.getText()
+                            + "`" + pukulField.getText()
+                            + "`" + reminderField.getText());
+                    File log = new File("src/input.txt");
+                    try {
+                        if (log.exists() == false) {
+                            System.out.println("We had to make a new file.");
+                            log.createNewFile();
+                        }
+                        PrintWriter out = new PrintWriter(new FileWriter(log, true));
+                        out.append(System.lineSeparator());
+                        out.append(comboBox.getSelectedItem()
+                                    + "`" + (list.getSelectedIndex()+1)
+                                    + "`" + table.getValueAt(row, col)
+                                    + "`" + combo.getSelectedItem()
+                                    + "`" + namaField.getText()
+                                    + "`" + tempatField.getText()
+                                    + "`" + pukulField.getText()
+                                    + "`" + subjectField.getText()
+                                    + "`" + dresscodeField.getText()
+                                    + "`" + reminderField.getText());
+                        out.close();
+                    } catch (IOException err) {
+                        System.out.println("COULD NOT LOG!!");
+                    }
+                    dispose();
+                }
+            });
+            pack();
+
+        }
+        public void actionPerformed(ActionEvent e) {
+            p = new JPanel(new GridLayout(0, 1));
+            String selected = (String) combo.getSelectedItem();
+
+            for (int i = 0; i < numPairs; i++) {
+                JLabel label = new JLabel(labels[i]);
+                p.add(label);
+                switch(i){
+                    case 0: label.setLabelFor(tanggalField);
+                        p.add(tanggalField);
+                        break;
+                    case 1: label.setLabelFor(pukulField);
+                        p.add(pukulField);
+                        break;
+                    case 2: label.setLabelFor(namaField);
+                        p.add(namaField);
+                        break;
+                    case 3: label.setLabelFor(combo);
+                        p.add(combo);
+                        break;
+                    case 4: label.setLabelFor(tempatField);
+                        p.add(tempatField);
+                        break;
+                    case 5: label.setLabelFor(reminderField);
+                        p.add(reminderField);
+                        break;
+                }
+            }
+            switch(selected){
+                case "Party":
+                    label1 = new JLabel("Subjek");
+                    label2 = new JLabel("Dress Code");
+                    subjectField = new JTextField(10);
+                    dresscodeField = new JTextField(10);
+                    p.add(label1);
+                    label1.setLabelFor(subjectField);
+                    p.add(subjectField);
+
+                    p.add(label2);
+                    label2.setLabelFor(dresscodeField);
+                    p.add(dresscodeField);
+                    System.out.println(combo.getSelectedItem().toString());
+                    break;
+                case "Meeting":
+                    label1 = new JLabel("Subjek");
+                    label3 = new JLabel("Partisipan");
+                    subjectField = new JTextField(10);
+                    participantField = new JTextField(10);
+                    p.add(label1);
+                    label1.setLabelFor(subjectField);
+                    p.add(subjectField);
+
+                    p.add(label3);
+                    label3.setLabelFor(participantField);
+                    p.add(participantField);
+                    System.out.println(combo.getSelectedItem().toString());
+                    break;
+            }
+            combo.addActionListener(this);
+            p.setOpaque(true);
+            setTitle("Add an Event");
+            setContentPane(p);
+            JButton okButton = new JButton("OK");
+            add(okButton,BorderLayout.LINE_END);
+            setVisible(true);
+            //pack();
+            //p.revalidate();
+            //p.validate();
+            okButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println(comboBox.getSelectedItem()
+                            + "`" + (list.getSelectedIndex()+1)
+                            + "`" + table.getValueAt(row, col)
+                            + "`" + combo.getSelectedItem()
+                            + "`" + namaField.getText()
+                            + "`" + tempatField.getText()
+                            + "`" + pukulField.getText()
+                            + "`" + reminderField.getText());
+                    File log = new File("src/input.txt");
+                    try{
+                        if(log.exists()==false){
+                            System.out.println("We had to make a new file.");
+                            log.createNewFile();
+                        }
+                        PrintWriter out = new PrintWriter(new FileWriter(log, true));
+                        out.append(System.lineSeparator());
+                        if(selected.equals("Party"))
+                            out.append(comboBox.getSelectedItem()
+                                + "`" + (list.getSelectedIndex()+1)
+                                + "`" + table.getValueAt(row, col)
+                                + "`" + combo.getSelectedItem()
+                                + "`" + namaField.getText()
+                                + "`" + tempatField.getText()
+                                + "`" + pukulField.getText()
+                                + "`" + subjectField.getText()
+                                + "`" + dresscodeField.getText()
+                                + "`" + reminderField.getText());
+                        else if(selected.equals("Meeting"))
+                            out.append(comboBox.getSelectedItem()
+                                    + "`" + (list.getSelectedIndex()+1)
+                                    + "`" + table.getValueAt(row, col)
+                                    + "`" + combo.getSelectedItem()
+                                    + "`" + namaField.getText()
+                                    + "`" + tempatField.getText()
+                                    + "`" + pukulField.getText()
+                                    + "`" + subjectField.getText()
+                                    + "`" + participantField.getText()
+                                    + "`" + reminderField.getText());
+                        out.close();
+                    }catch(IOException err){
+                        System.out.println("COULD NOT LOG!!");
+                    }
+                    dispose();
+                }
+            });
+            repaint();
+        }
     }
 
     public static void main(String[] args) {
@@ -58,7 +335,6 @@ public class Calendar extends JFrame {
     public class ComboHandler implements ItemListener {
         public void itemStateChanged(ItemEvent e) {
             model.setMonth(Integer.parseInt(comboBox.getSelectedItem().toString()), list.getSelectedIndex());
-            //System.out.println(comboBox.getSelectedItem());
             table.repaint();
         }
     }
@@ -90,24 +366,37 @@ class CalendarModel extends AbstractTableModel {
                     day[i][j][k] = new Day();
             }
         }
+        TextFileSorter sorter = new TextFileSorter();
+        try{
+            sorter.sort();
+        }
+        catch(Exception e){
+
+        }
         init();
+    }
+
+    public Day[][][] getDay (){
+        return day;
     }
 
     public void init(){
         String line;
-        String delims = "[-]+";
+        String delims = "[`]+";
         String[] tokens;
         Day tempday = new Day();
-        try(BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\user\\IdeaProjects\\Calendar\\input.txt"))) {
+        int tokendaybefore = 0;
+        int tokenmonthbefore = 0;
+        int tokenyearbefore = 0;
+        try(BufferedReader br = new BufferedReader(new FileReader("src/input.txt"))) {
             line = br.readLine();
             if(line != null){
-                //tokens = line.split(delims);
                 do {
                     tokens = line.split(delims);
                     int tokenyear = 0;
                     int tokenmonth = 0 ;
                     int tokenday = 0;
-                    int tokendaybefore = 0;
+
                     for (int j = 0; j < tokens.length; j++) {
                         switch(j){
                             case 0 :tokenyear = Integer.parseInt(tokens[j])-Integer.parseInt(years[0]);
@@ -116,20 +405,29 @@ class CalendarModel extends AbstractTableModel {
                                     break;
                             case 2 :tokenday = Integer.parseInt(tokens[j])-1;
                                     break;
-                        }
-                        if(j == 3){
-                            if(tokens[j].equals("Party")) {
-                                Event tokenevent = new Party(tokens[j + 1], tokens[j + 2], tokens[j + 3], tokens[j + 4], tokens[j + 5]);
-                                if(tokendaybefore != tokenday)
-                                    tempday = new Day();
-                                tempday.addEvent(tokenevent);
-                                day[tokenyear][tokenmonth][tokenday] =  tempday;
-                            }
-                            else if(tokens[j].equals("Meeting")){
-                                //donothing
-                            }
-                            tokendaybefore = tokenday;
-                            break;
+                            case 3:if(tokens[j].equals("Party")) {
+                                        Event tokenevent = new Party(tokens[j + 1], tokens[j + 2], tokens[j + 3], tokens[j + 4], tokens[j + 5]);
+                                        if(tokendaybefore != tokenday || tokenmonthbefore != tokenmonth || tokenyearbefore != tokenyear){
+                                            tempday = new Day();
+                                        }
+                                        tempday.addEvent(tokenevent);
+                                        day[tokenyear][tokenmonth][tokenday] =  tempday;
+                                    }
+                                    else if(tokens[j].equals("Meeting")){
+                                        String[] tokenparticipant = tokens[j + 5].split(",");
+                                        ArrayList<String> participant = new ArrayList<String>();
+                                        Collections.addAll(participant, tokenparticipant);
+                                        Event tokenevent = new Meeting(tokens[j + 1], tokens[j + 2], tokens[j + 3], tokens[j + 4], participant);
+                                        if(tokendaybefore != tokenday || tokenmonthbefore != tokenmonth || tokenyearbefore != tokenyear){
+                                            tempday = new Day();
+                                        }
+                                        tempday.addEvent(tokenevent);
+                                        day[tokenyear][tokenmonth][tokenday] =  tempday;
+                                    }
+                                    tokendaybefore = tokenday;
+                                    tokenmonthbefore = tokenmonth;
+                                    tokenyearbefore = tokenyear;
+                                    break;
                         }
                     }
                 }while ((line = br.readLine()) != null);
@@ -138,13 +436,13 @@ class CalendarModel extends AbstractTableModel {
         catch (IOException e){
             //System.out.println("File I/O error!");
         }
-        for (int i = 0; i < years.length; i++) {
-            for (int j = 0; j < months.length; j++) {
-                for (int k = 0; k < numDays[j]; ++k) {
-                    day[i][j][k].printDay();
-                }
-            }
-        }
+        //for (int i = 0; i < years.length; i++) {
+            //for (int j = 0; j < months.length; j++) {
+                //for (int k = 0; k < numDays[j]; ++k) {
+                    day[0][0][0].printDay();
+                //}
+            //}
+        //}
     }
 
     public int getRowCount() {
@@ -172,7 +470,6 @@ class CalendarModel extends AbstractTableModel {
         int offset = cal.get(java.util.GregorianCalendar.DAY_OF_WEEK) - 1;
         offset += 7;
         int num = daysInMonth(year, month);
-        //day[month] = new ArrayList<Day>();
         for (int i = 0; i < num; ++i) {
             calendar[offset / 7][offset % 7] = Integer.toString(i + 1);
             ++offset;
@@ -192,96 +489,36 @@ class CalendarModel extends AbstractTableModel {
         return days;
     }
 }
-/*public class Calendar{
-    private ArrayList<Day> days;
-    public Calendar(){
-        days = new ArrayList<Day>();
-    }
-    public Calendar(ArrayList<Day> newday){
-        days = new ArrayList<Day>(newday);
-    }
+class TextFileSorter {
 
-    public void addDay(Day D){
-        days.add(D);
-    }
+    public void sort() throws Exception {
 
-    public Day getDay(int i){
-        return days.get(i);
-    }
-    String[] days = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+        String inputFile = "src/input.txt";
+        String outputFile = "src/input.txt";
 
-    int[] numDays = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-
-    String[][] calendar = new String[7][7];
-    public void setMonth(int year, int month) {
-        for (int i = 1; i < 7; ++i)
-            for (int j = 0; j < 7; ++j)
-                calendar[i][j] = "   ";
-        java.util.GregorianCalendar cal = new java.util.GregorianCalendar();
-        cal.set(year, month, 1);
-        int offset = cal.get(java.util.GregorianCalendar.DAY_OF_WEEK) - 1;
-        //offset += 7;
-        int num = daysInMonth(year, month);
-        for (int i = 0; i < num; ++i) {
-            calendar[offset / 7][offset % 7] = Integer.toString(i + 1);
-            ++offset;
+        FileReader fileReader = new FileReader(inputFile);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        String inputLine;
+        java.util.List<String> lineList = new ArrayList<String>();
+        while ((inputLine = bufferedReader.readLine()) != null) {
+            if(!inputLine.equals(""))
+                lineList.add(inputLine);
         }
+        fileReader.close();
+
+        Collections.sort(lineList);
+
+        FileWriter fileWriter = new FileWriter(outputFile);
+        PrintWriter out = new PrintWriter(fileWriter);
+        for (String outputLine : lineList) {
+            out.println(outputLine);
+        }
+        out.flush();
+        out.close();
+        fileWriter.close();
+
     }
-    public int daysInMonth(int year, int month) {
-        int days = numDays[month];
-        if (month == 1 && isLeapYear(year))
-            ++days;
-        return days;
-    }
-    public boolean isLeapYear(int year) {
-        if (year % 4 == 0)
-            return true;
-        return false;
-    }
-    public static void main(String[] args){
-
-        Calendar c = new Calendar();
-
-        c.setMonth(2015, 3);
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        JTable table = new JTable(c.calendar, c.days);
-
-        table.setCellSelectionEnabled(true);
-        ListSelectionModel cellSelectionModel = table.getSelectionModel();
-        cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        MouseListener mouseListener = new MouseAdapter() {
-            public void mouseisClicked(MouseEvent mouseEvent) {
-                if (mouseEvent.getClickCount() == 2) {
-                    JOptionPane.showMessageDialog(null, "testing");
-                }
-            }
-        };
-        cellSelectionModel.addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent e) {
-                String selectedData = null;
-
-                int[] selectedRow = table.getSelectedRows();
-                int[] selectedColumns = table.getSelectedColumns();
-
-                for (int i = 0; i < selectedRow.length; i++) {
-                    for (int j = 0; j < selectedColumns.length; j++) {
-                        selectedData = (String) table.getValueAt(selectedRow[i], selectedColumns[j]);
-                    }
-                }
-                System.out.println("Selected: " + selectedData);
-            }
-
-        });
-        JScrollPane scrollPane = new JScrollPane(table);
-        frame.add(scrollPane, BorderLayout.CENTER);
-        frame.setSize(300, 150);
-        frame.setVisible(true);
-    }
-}*/
-
-
+}
 /*
         import java.awt.Color;
         import java.awt.Container;
