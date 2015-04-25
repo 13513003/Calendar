@@ -1,5 +1,6 @@
 package Calender;
 
+<<<<<<< HEAD
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -593,77 +594,47 @@ class CalendarHack extends JPanel {
                 }
                 cal.add(Calendar.DATE, +1);
             }
+=======
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
+
+/**
+ *
+ * @author Lenovo
+ */
+public class Calendar{
+    public Calendar() {
+        File file = new File("./theme");
+        try {
+            URL[] cp = {file.toURI().toURL()};
+            URLClassLoader urlcl = new URLClassLoader(cp);
+            Class AClass = urlcl.loadClass("calendar.Show");
+            Class interfaces[] = AClass.getInterfaces();
+            for (Class intf : interfaces) {
+                if (intf.getName().equals("calendar.CalendarView")) {
+                    Show calendarShow = (Show)AClass.newInstance();
+                    calendarShow.showCalendar(); 
+                }
+            }
+        } 
+        catch (MalformedURLException ex) {
+            JOptionPane.showMessageDialog(null, "Invalid URL", "Error", ERROR_MESSAGE);
         }
-    }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame();
-        CalendarHack ch = new CalendarHack();
-        ch.setDate(new Date());
-        frame.getContentPane().add(ch);
-        frame.setUndecorated(true);
-
-        MoveMouseListener mml = new MoveMouseListener(ch);
-        ch.addMouseListener(mml);
-        ch.addMouseMotionListener(mml);
-
-        frame.pack();
-        frame.setVisible(true);
+        catch (ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "Class Not Found", "Error", ERROR_MESSAGE);
+        }
+        catch (InstantiationException ex) {
+            JOptionPane.showMessageDialog(null, "Class Cannot Be Instantiated", "Error", ERROR_MESSAGE);
+        }
+        catch (IllegalAccessException ex) {
+            JOptionPane.showMessageDialog(null, "Illegal Access", "Error", ERROR_MESSAGE);
+>>>>>>> origin/master
+        }
     }
 }
-
-class MoveMouseListener implements MouseListener, MouseMotionListener {
-    JComponent target;
-
-    Point start_drag;
-
-    Point start_loc;
-
-    public MoveMouseListener(JComponent target) {
-        this.target = target;
-    }
-
-    public static JFrame getFrame(Container target) {
-        if (target instanceof JFrame) {
-            return (JFrame) target;
-        }
-        return getFrame(target.getParent());
-    }
-
-    Point getScreenLocation(MouseEvent e) {
-        Point cursor = e.getPoint();
-        Point target_location = this.target.getLocationOnScreen();
-        return new Point((int) (target_location.getX() + cursor.getX()),
-                (int) (target_location.getY() + cursor.getY()));
-    }
-
-    public void mouseClicked(MouseEvent e) {
-    }
-
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    public void mouseExited(MouseEvent e) {
-    }
-
-    public void mousePressed(MouseEvent e) {
-        this.start_drag = this.getScreenLocation(e);
-        this.start_loc = this.getFrame(this.target).getLocation();
-    }
-
-    public void mouseReleased(MouseEvent e) {
-    }
-
-    public void mouseDragged(MouseEvent e) {
-        Point current = this.getScreenLocation(e);
-        Point offset = new Point((int) current.getX() - (int) start_drag.getX(), (int) current.getY()
-                - (int) start_drag.getY());
-        JFrame frame = this.getFrame(target);
-        Point new_location = new Point((int) (this.start_loc.getX() + offset.getX()),
-                (int) (this.start_loc.getY() + offset.getY()));
-        frame.setLocation(new_location);
-    }
-
-    public void mouseMoved(MouseEvent e) {
-    }
-}*/
