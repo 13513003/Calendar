@@ -49,7 +49,7 @@ public class Event {
 
     public String toStringEvent(){
         String temp = new String();
-        temp = eventTime+'\n'+eventName+'\n'+eventLocation;
+        temp = eventTime+','+eventName+','+eventLocation;
         return temp;
     }
 }

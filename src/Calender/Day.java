@@ -35,6 +35,7 @@ public class Day {
     public String toStringDay(int i){
         String temp = new String();
         temp = event.get(i).toStringEvent();
+        //System.out.println(temp);
         return temp;
     }
 }

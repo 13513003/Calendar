@@ -39,7 +39,7 @@ public class Party extends Event {
     @Override
     public String toStringEvent(){
         String temp = new String();
-        temp = eventTime+'\n'+eventName+'\n'+eventLocation+'\n'+subject+'\n'+dresscode;
+        temp = eventTime+','+eventName+','+eventLocation+','+subject+','+dresscode;
         return temp;
     }
 }

@@ -46,7 +46,7 @@ public class Meeting extends Event {
         String participants = new String();
         for(String word : participant)
             participants += word;
-        temp = eventTime+'\n'+eventName+'\n'+eventLocation+'\n'+subject+'\n'+participants;
+        temp = eventTime+','+eventName+','+eventLocation+','+subject+','+participants;
         return temp;
     }
 }

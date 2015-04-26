@@ -1,18 +1,15 @@
 package Calender;
 
-<<<<<<< HEAD
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 import java.util.Collections;
-import java.util.EventListener;
-import java.util.List;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.SpringLayout;
+
 public class Calendar extends JFrame {
     String[] years = { "2015", "2016", "2017" };
 
@@ -31,27 +28,40 @@ public class Calendar extends JFrame {
 
     Clock clock = new Clock();
 
+    JLabel date;
+
     public Calendar() {
         super();
         setTitle("Calendar");
         getContentPane().setLayout(null);
+        java.util.Calendar now = java.util.Calendar.getInstance();
+        int year = now.get(java.util.Calendar.YEAR);
+        int month = now.get(java.util.Calendar.MONTH);
+        int day = now.get(java.util.Calendar.DAY_OF_MONTH);
+        System.out.println(year + " " + month + " " + day);
         comboBox.setBounds(10, 10, 100, 30);
-        comboBox.setSelectedIndex(0);
+        comboBox.setSelectedItem(year);
         comboBox.addItemListener(new ComboHandler());
-        scrollPane.setBounds(200, 10, 150, 100);
-        list.setSelectedIndex(3);
+        scrollPane.setBounds(330, 10, 150, 100);
+        list.setSelectedIndex(month);
         list.addListSelectionListener(new ListHandler());
+        JLabel currdate = new JLabel(day+" "+list.getSelectedValue() + " " +year);
+        date = new JLabel(list.getSelectedValue() + " " +comboBox.getSelectedItem().toString());
+        date.setBounds(10, 115, 100, 50);
         table.setBounds(10, 150, 470, 115);
         model.setMonth(Integer.parseInt(comboBox.getSelectedItem().toString()), list.getSelectedIndex());
         getContentPane().add(comboBox);
         getContentPane().add(scrollPane);
+        getContentPane().add(date);
         table.setGridColor(Color.black);
         table.setShowGrid(true);
         table.setCellSelectionEnabled(true);
         ListSelectionModel cellSelectionModel = table.getSelectionModel();
         cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         getContentPane().add(table);
-        clock.setBounds(300, 265, 200, 200);
+        currdate.setBounds(325,250,100,50);
+        getContentPane().add(currdate);
+        clock.setBounds(300, 285, 200, 100);
         getContentPane().add(clock);
         table.addMouseListener(new MouseAdapter(){
             public void mouseClicked(MouseEvent e){
@@ -68,7 +78,7 @@ public class Calendar extends JFrame {
         });
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        setSize(500, 350);
+        setSize(500, 380);
         setVisible(true);
     }
 
@@ -93,8 +103,14 @@ public class Calendar extends JFrame {
             add(addButton, BorderLayout.CENTER);
             addButton.addActionListener(this);
             listModel.addElement(table.getValueAt(row, col).toString() + " " + list.getSelectedValue() + " " + comboBox.getSelectedItem().toString());
-            for(int i=0; i<model.getDay()[Integer.parseInt(comboBox.getSelectedItem().toString()) - Integer.parseInt(years[0])][list.getSelectedIndex()][Integer.parseInt(table.getValueAt(row, col).toString()) - 1].getEvent().size();i++)
-                listModel.addElement(model.getDay()[Integer.parseInt(comboBox.getSelectedItem().toString()) - Integer.parseInt(years[0])][list.getSelectedIndex()][Integer.parseInt(table.getValueAt(row, col).toString()) - 1].toStringDay(i));
+            listModel.addElement("----------------------------------");
+            for(int i=0; i<model.getDay()[Integer.parseInt(comboBox.getSelectedItem().toString()) - Integer.parseInt(years[0])][list.getSelectedIndex()][Integer.parseInt(table.getValueAt(row, col).toString()) - 1].getEvent().size();i++){
+                String event = model.getDay()[Integer.parseInt(comboBox.getSelectedItem().toString()) - Integer.parseInt(years[0])][list.getSelectedIndex()][Integer.parseInt(table.getValueAt(row, col).toString()) - 1].toStringDay(i);
+                String[] tokenevent = event.split(",");
+                for(String partevent : tokenevent )
+                    listModel.addElement(partevent);
+                listModel.addElement("----------------------------------");
+            }
         }
         public void actionPerformed(ActionEvent evt){
             eventAdder a = new eventAdder(row,col);
@@ -336,6 +352,7 @@ public class Calendar extends JFrame {
     public class ComboHandler implements ItemListener {
         public void itemStateChanged(ItemEvent e) {
             model.setMonth(Integer.parseInt(comboBox.getSelectedItem().toString()), list.getSelectedIndex());
+            date.setText(list.getSelectedValue() + " " +comboBox.getSelectedItem().toString());
             table.repaint();
         }
     }
@@ -343,6 +360,7 @@ public class Calendar extends JFrame {
     public class ListHandler implements ListSelectionListener {
         public void valueChanged(ListSelectionEvent e) {
             model.setMonth(Integer.parseInt(comboBox.getSelectedItem().toString()), list.getSelectedIndex());
+            date.setText(list.getSelectedValue() + " " +comboBox.getSelectedItem().toString());
             table.repaint();
         }
     }
@@ -594,47 +612,77 @@ class CalendarHack extends JPanel {
                 }
                 cal.add(Calendar.DATE, +1);
             }
-=======
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-import static javax.swing.JOptionPane.ERROR_MESSAGE;
-
-/**
- *
- * @author Lenovo
- */
-public class Calendar{
-    public Calendar() {
-        File file = new File("./theme");
-        try {
-            URL[] cp = {file.toURI().toURL()};
-            URLClassLoader urlcl = new URLClassLoader(cp);
-            Class AClass = urlcl.loadClass("calendar.Show");
-            Class interfaces[] = AClass.getInterfaces();
-            for (Class intf : interfaces) {
-                if (intf.getName().equals("calendar.CalendarView")) {
-                    Show calendarShow = (Show)AClass.newInstance();
-                    calendarShow.showCalendar(); 
-                }
-            }
-        } 
-        catch (MalformedURLException ex) {
-            JOptionPane.showMessageDialog(null, "Invalid URL", "Error", ERROR_MESSAGE);
-        }
-        catch (ClassNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "Class Not Found", "Error", ERROR_MESSAGE);
-        }
-        catch (InstantiationException ex) {
-            JOptionPane.showMessageDialog(null, "Class Cannot Be Instantiated", "Error", ERROR_MESSAGE);
-        }
-        catch (IllegalAccessException ex) {
-            JOptionPane.showMessageDialog(null, "Illegal Access", "Error", ERROR_MESSAGE);
->>>>>>> origin/master
         }
     }
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame();
+        CalendarHack ch = new CalendarHack();
+        ch.setDate(new Date());
+        frame.getContentPane().add(ch);
+        frame.setUndecorated(true);
+
+        MoveMouseListener mml = new MoveMouseListener(ch);
+        ch.addMouseListener(mml);
+        ch.addMouseMotionListener(mml);
+
+        frame.pack();
+        frame.setVisible(true);
+    }
 }
+
+class MoveMouseListener implements MouseListener, MouseMotionListener {
+    JComponent target;
+
+    Point start_drag;
+
+    Point start_loc;
+
+    public MoveMouseListener(JComponent target) {
+        this.target = target;
+    }
+
+    public static JFrame getFrame(Container target) {
+        if (target instanceof JFrame) {
+            return (JFrame) target;
+        }
+        return getFrame(target.getParent());
+    }
+
+    Point getScreenLocation(MouseEvent e) {
+        Point cursor = e.getPoint();
+        Point target_location = this.target.getLocationOnScreen();
+        return new Point((int) (target_location.getX() + cursor.getX()),
+                (int) (target_location.getY() + cursor.getY()));
+    }
+
+    public void mouseClicked(MouseEvent e) {
+    }
+
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    public void mouseExited(MouseEvent e) {
+    }
+
+    public void mousePressed(MouseEvent e) {
+        this.start_drag = this.getScreenLocation(e);
+        this.start_loc = this.getFrame(this.target).getLocation();
+    }
+
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    public void mouseDragged(MouseEvent e) {
+        Point current = this.getScreenLocation(e);
+        Point offset = new Point((int) current.getX() - (int) start_drag.getX(), (int) current.getY()
+                - (int) start_drag.getY());
+        JFrame frame = this.getFrame(target);
+        Point new_location = new Point((int) (this.start_loc.getX() + offset.getX()),
+                (int) (this.start_loc.getY() + offset.getY()));
+        frame.setLocation(new_location);
+    }
+
+    public void mouseMoved(MouseEvent e) {
+    }
+}*/
