@@ -76,17 +76,15 @@ public class Notification {
                         notifMeeting.getEventReminder() + "\n" ;
             }
             JOptionPane message = new JOptionPane(output, INFORMATION_MESSAGE);
-            JDialog dialog = message.createDialog(null, "Notification");
+            JDialog dialog = message.createDialog(null, "Today's Event");
             dialog.show();
-            if (message.getValue() != null) {
-                clip.stop();
-            }
+            clip.stop();
         } catch (Exception e) {
 
         }
     }
 
-    public void playNotificationSound() {
+    /* public void playNotificationSound() {
             try {
                 String bip = "C:\\Users\\user\\Downloads\\alarm_beep.wav";
                 File wavFile = new File(bip);
@@ -102,5 +100,5 @@ public class Notification {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-    }
+    } */
 }
