@@ -39,9 +39,15 @@ public class CalendarHandler implements CalendarView {
         int year = now.get(java.util.Calendar.YEAR);
         int month = now.get(java.util.Calendar.MONTH);
         int day = now.get(java.util.Calendar.DAY_OF_MONTH);
+<<<<<<< HEAD
         Day[][][] notifDay = model.getDay();
         if ((notifDay[year - Integer.parseInt(years[0])][month][day - 1].isDayEmpty()) != 1) {
             for (Event e : notifDay[year - Integer.parseInt(years[0])][month][day - 1].getEvent()) {
+=======
+        notifDay = model.getDay();
+        if ((notifDay[year-Integer.parseInt(years[0])][month][day-1].isDayEmpty()) != 1) {
+            for (Event e : notifDay[year-Integer.parseInt(years[0])][month][day-1].getEvent()) {
+>>>>>>> origin/master
                 Notification notif = new Notification(e);
                 notif.showNotification();
             }
@@ -123,6 +129,7 @@ public class CalendarHandler implements CalendarView {
         table.repaint();
     }
 
+<<<<<<< HEAD
     private void comboBoxItemStateChanged(java.awt.event.ItemEvent e) {
         model.setMonth(Integer.parseInt(comboBox.getSelectedItem().toString()), list.getSelectedIndex());
         date.setText(list.getSelectedValue() + " " + comboBox.getSelectedItem().toString());
@@ -143,6 +150,69 @@ public class CalendarHandler implements CalendarView {
         list.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 listValueChanged(evt);
+=======
+    public class ListHandler implements ListSelectionListener {
+        public void valueChanged(ListSelectionEvent e) {
+            model.setMonth(Integer.parseInt(comboBox.getSelectedItem().toString()), list.getSelectedIndex());
+            date.setText(list.getSelectedValue() + " " + comboBox.getSelectedItem().toString());
+            table.repaint();
+        }
+    }
+    public class nextHandler implements ActionListener{
+        public void actionPerformed(ActionEvent e){
+            if ((comboBox.getSelectedIndex() != years.length) && (list.getSelectedIndex() == 11)) {
+                    comboBox.setSelectedIndex(comboBox.getSelectedIndex() + 1);
+                    list.setSelectedIndex(0);
+                }
+                else
+                    list.setSelectedIndex(list.getSelectedIndex()+1);
+            comboBox.addItemListener(new ComboHandler());
+            list.addListSelectionListener(new ListHandler());
+        }
+    }
+
+    public class beforeHandler implements ActionListener{
+        public void actionPerformed(ActionEvent e){
+            if ((comboBox.getSelectedIndex() != 0) && (list.getSelectedIndex() == 0)) {
+                    comboBox.setSelectedIndex(comboBox.getSelectedIndex() - 1);
+                    list.setSelectedIndex(11);
+                }
+                else
+                    list.setSelectedIndex(list.getSelectedIndex()-1);
+            comboBox.addItemListener(new ComboHandler());
+            list.addListSelectionListener(new ListHandler());
+        }
+    }
+
+    public class eventLister extends JPanel implements ActionListener{
+
+        DefaultListModel listModel;
+        int row = 0;
+        int col = 0;
+
+        public eventLister(int selectedrow,int selectedcol){
+            row = selectedrow;
+            col = selectedcol;
+            listModel = new DefaultListModel();
+            setLayout(new BorderLayout());
+            JList listevent = new JList(listModel);
+            listevent.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+            listevent.setLayoutOrientation(JList.VERTICAL);
+            setPreferredSize(new Dimension(205, 180));
+            JScrollPane listScroller = new JScrollPane(listevent);
+            add(listScroller, BorderLayout.NORTH);
+            JButton addButton = new JButton("+");
+            add(addButton, BorderLayout.CENTER);
+            addButton.addActionListener(this);
+            listModel.addElement(table.getValueAt(row, col).toString() + " " + list.getSelectedValue() + " " + comboBox.getSelectedItem().toString());
+            listModel.addElement("----------------------------------------------------------------");
+            for(int i=0; i<model.getDay()[Integer.parseInt(comboBox.getSelectedItem().toString()) - Integer.parseInt(years[0])][list.getSelectedIndex()][Integer.parseInt(table.getValueAt(row, col).toString()) - 1].getEvent().size();i++){
+                String event = model.getDay()[Integer.parseInt(comboBox.getSelectedItem().toString()) - Integer.parseInt(years[0])][list.getSelectedIndex()][Integer.parseInt(table.getValueAt(row, col).toString()) - 1].toStringDay(i);
+                String[] tokenevent = event.split(",");
+                for(String partevent : tokenevent )
+                    listModel.addElement(partevent);
+                listModel.addElement("----------------------------------------------------------------");
+>>>>>>> origin/master
             }
         });
     }
