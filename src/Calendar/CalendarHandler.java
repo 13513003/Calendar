@@ -133,14 +133,12 @@ public class CalendarHandler implements CalendarView {
     }
     public class nextHandler implements ActionListener{
         public void actionPerformed(ActionEvent e){
-            if (comboBox.getSelectedIndex() != years.length) {
-                if(list.getSelectedIndex() == 11) {
+            if ((comboBox.getSelectedIndex() != years.length) && (list.getSelectedIndex() == 11)) {
                     comboBox.setSelectedIndex(comboBox.getSelectedIndex() + 1);
                     list.setSelectedIndex(0);
                 }
                 else
                     list.setSelectedIndex(list.getSelectedIndex()+1);
-            }
             comboBox.addItemListener(new ComboHandler());
             list.addListSelectionListener(new ListHandler());
         }
@@ -148,14 +146,12 @@ public class CalendarHandler implements CalendarView {
 
     public class beforeHandler implements ActionListener{
         public void actionPerformed(ActionEvent e){
-            if (comboBox.getSelectedIndex() != 0) {
-                if(list.getSelectedIndex() == 0) {
+            if ((comboBox.getSelectedIndex() != 0) && (list.getSelectedIndex() == 0)) {
                     comboBox.setSelectedIndex(comboBox.getSelectedIndex() - 1);
                     list.setSelectedIndex(11);
                 }
                 else
                     list.setSelectedIndex(list.getSelectedIndex()-1);
-            }
             comboBox.addItemListener(new ComboHandler());
             list.addListSelectionListener(new ListHandler());
         }
