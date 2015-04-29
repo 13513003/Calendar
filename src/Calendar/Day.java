@@ -11,6 +11,7 @@ public class Day {
     public Day(){
         event = new ArrayList<Event>();
     }
+
     public Day(ArrayList<Event> newevent){
         event = new ArrayList<Event>(newevent);
     }
@@ -26,6 +27,7 @@ public class Day {
     public ArrayList<Event> getEvent(){
         return event;
     }
+
     public void printDay(){
         for(int i=0; i<event.size();i++){
             event.get(i).printEvent();
@@ -43,7 +45,6 @@ public class Day {
     public String toStringDay(int i){
         String temp = new String();
         temp = event.get(i).toStringEvent();
-        //System.out.println(temp);
         return temp;
     }
 }

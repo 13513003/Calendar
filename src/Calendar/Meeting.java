@@ -20,6 +20,7 @@ public class Meeting extends Event {
     public ArrayList<String> getParticipant(){
         return participant;
     }
+
     public String getParticipant(int i) {
         return participant.get(i);
     }
@@ -35,13 +36,14 @@ public class Meeting extends Event {
     public void setSubject(String newsubject) {
         subject = newsubject;
     }
+
     @Override
-    public void printEvent(){
+    public String printEvent(){
         String participants = new String();
         for(String word : participant)
             participants += word;
-        System.out.print(eventName+" "+eventLocation+" "+eventTime+" "+subject+" "+participants+" "+eventReminder);
-        System.out.println("");
+        return eventName+" "+eventLocation+" "+eventTime+" "+subject+" "+participants+" "+eventReminder;
+        //System.out.println("");
     }
     @Override
     public String toStringEvent(){
@@ -54,9 +56,9 @@ public class Meeting extends Event {
                 firstword = 0;
             }
             else
-                participants += "-"+word;
+                participants += ","+word;
         }
-        temp = eventTime+','+"Meeting :"+eventName+','+"Lokasi :"+eventLocation+','+"Topik :"+subject+','+"Partisipan :"+participants+','+"Pesan :"+eventReminder;
+        temp = eventTime+';'+"Meeting: "+eventName+';'+"Lokasi: "+eventLocation+';'+"Topik: "+subject+';'+"Partisipan: "+participants+';'+"Pesan: "+eventReminder;
         return temp;
     }
 }

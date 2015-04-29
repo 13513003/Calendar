@@ -32,14 +32,14 @@ public class Party extends Event {
         subject = newsubject;
     }
     @Override
-    public void printEvent(){
-        System.out.print(eventName+" "+eventLocation+" "+eventTime+" "+subject+" "+dresscode+" "+eventReminder);
-        System.out.println("");
+    public String printEvent(){
+        return eventName+"`"+eventLocation+"`"+eventTime+"`"+subject+"`"+dresscode+"`"+eventReminder;
+        //System.out.println("");
     }
     @Override
     public String toStringEvent(){
         String temp = new String();
-        temp = eventTime+','+"Party :"+eventName+','+"Lokasi :"+eventLocation+','+"Tema :"+subject+','+"DC :"+dresscode+','+"Pesan :"+eventReminder;
+        temp = eventTime+';'+"Party: "+eventName+';'+"Lokasi: "+eventLocation+';'+"Tema: "+subject+';'+"DC: "+dresscode+';'+"Pesan: "+eventReminder;
         return temp;
     }
 }

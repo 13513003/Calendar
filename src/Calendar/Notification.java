@@ -78,29 +78,9 @@ public class Notification {
             JOptionPane message = new JOptionPane(output, INFORMATION_MESSAGE);
             JDialog dialog = message.createDialog(null, "Notification");
             dialog.show();
-            if (message.getValue() != null) {
-                clip.stop();
-            }
+            clip.stop();
         } catch (Exception e) {
 
         }
-    }
-
-    public void playNotificationSound() {
-            try {
-                String bip = "C:\\Users\\user\\Downloads\\alarm_beep.wav";
-                File wavFile = new File(bip);
-                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(wavFile);
-                AudioFormat af = audioInputStream.getFormat();
-                int nSize = (int) (af.getFrameSize() * audioInputStream.getFrameLength());
-                byte[] audio = new byte[nSize];
-                DataLine.Info info = new DataLine.Info(Clip.class, af, nSize);
-                audioInputStream.read(audio, 0, nSize);
-                Clip clip = (Clip) AudioSystem.getLine(info);
-                clip.open(af, audio, 0, nSize);
-                clip.start();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
     }
 }

@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.table.AbstractTableModel;
@@ -23,13 +24,6 @@ class CalendarModel extends AbstractTableModel {
         calendar = new String[7][7];
         for (int i = 0; i < days.length; i++)
             calendar[0][i] = days[i];
-        for (int i = 0; i < years.length; i++) {
-            for (int j = 0; j < months.length; j++) {
-                for (int k = 0; k < numDays[j]; ++k)
-                    day[i][j][k] = new Day();
-            }
-        }
-
         init();
     }
 
@@ -42,6 +36,12 @@ class CalendarModel extends AbstractTableModel {
         String delims = "[`]+";
         String[] tokens;
         Day tempday = new Day();
+        for (int i = 0; i < years.length; i++) {
+            for (int j = 0; j < months.length; j++) {
+                for (int k = 0; k < numDays[j]; ++k)
+                    day[i][j][k] = new Day();
+            }
+        }
         try{
             sort();
         }
@@ -69,7 +69,7 @@ class CalendarModel extends AbstractTableModel {
                             case 2 :tokenday = Integer.parseInt(tokens[j])-1;
                                 break;
                             case 3:if(tokens[j].equals("Party")) {
-                                Event tokenevent = new Party(tokens[j + 1], tokens[j + 2], tokens[j + 3], tokens[j+6] ,tokens[j + 4], tokens[j + 5]);
+                                Event tokenevent = new Party(tokens[j + 2], tokens[j + 3], tokens[j + 1], tokens[j+6] ,tokens[j + 4], tokens[j + 5]);
                                 if(tokendaybefore != tokenday || tokenmonthbefore != tokenmonth || tokenyearbefore != tokenyear){
                                     tempday = new Day();
                                 }
@@ -80,7 +80,7 @@ class CalendarModel extends AbstractTableModel {
                                 String[] tokenparticipant = tokens[j + 5].split(",");
                                 ArrayList<String> participant = new ArrayList<String>();
                                 Collections.addAll(participant, tokenparticipant);
-                                Event tokenevent = new Meeting(tokens[j + 1], tokens[j + 2], tokens[j + 3],  tokens[j+6],tokens[j + 4], participant);
+                                Event tokenevent = new Meeting(tokens[j + 2], tokens[j + 3], tokens[j + 1],  tokens[j+6],tokens[j + 4], participant);
                                 if(tokendaybefore != tokenday || tokenmonthbefore != tokenmonth || tokenyearbefore != tokenyear){
                                     tempday = new Day();
                                 }
@@ -133,9 +133,7 @@ class CalendarModel extends AbstractTableModel {
     }
 
     public boolean isLeapYear(int year) {
-        if (year % 4 == 0)
-            return true;
-        return false;
+        return year % 4 == 0;
     }
 
     public int daysInMonth(int year, int month) {
@@ -159,7 +157,6 @@ class CalendarModel extends AbstractTableModel {
                 lineList.add(inputLine);
         }
         fileReader.close();
-
         Collections.sort(lineList);
 
         FileWriter fileWriter = new FileWriter(outputFile);

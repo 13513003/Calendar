@@ -52,14 +52,15 @@ public class Event {
     public void setEventReminder(String Reminder) {
         eventReminder = Reminder;
     }
-    public void printEvent(){
-        System.out.print(eventName+" "+eventLocation+" "+eventTime+" "+eventReminder);
-        System.out.println("");
+
+    public String printEvent(){
+        return eventName+"`"+eventLocation+"`"+eventTime+"`"+eventReminder;
+        //System.out.println("");
     }
 
     public String toStringEvent(){
         String temp = new String();
-        temp = eventTime+','+eventName+','+eventLocation+','+eventReminder;
+        temp = eventTime+';'+eventName+';'+eventLocation+';'+eventReminder;
         return temp;
     }
 }

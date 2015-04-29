@@ -1,12 +1,12 @@
-2015`1`1`Party`Alex's Party`Kos Alex`10.30-11.30 AM`Alex's Birthday`Army Color`Don't Forget!
-2015`1`1`Party`Bachelor Party`Kosan Cliff`09.30-10.00 AM`Celebrating Cliff's 20 year of bachelorness`Casual`Bawa Cewe
-2015`1`1`Party`Five Nights at Freddy's`Kos Freddy`11.00-12.00 AM`Freddy's Birthday`Casual`A
-2015`1`2`Party`BarQ Party`Ladang Jagung`11.00-12.00 AM`Iseng`Cowboy`Bring Sausage
-2015`1`4`Party`School Party`School`09.00-10.00 AM`Pesta Kelulusan`Putih Abu-Abu`Dateng
-2015`2`1`Party`Alex's Party`Kos Alex`10.30-11.30 AM`Alex's Birthday`Army Color`Don't Forget!
-2015`3`1`Party`Juan's Party`Kos Juan`09.30-10.30 AM`Juan's Birthday`Pastel Color`Don't Forget!
-2015`3`2`Party`School Party`School`09.00-10.00 AM`Pesta Kelulusan`Putih Abu-Abu`Dateng
-2015`4`1`Party`April Mop`Selasar Basdat`11.00-11.30`April Mop`Jahim`AA
-2015`4`27`Party`Apa Aja`Sini`09.00-10.00 AM`Apa Aja`Casual`.
-2015`4`2`Meeting`Rapat HMIF`Selasar TU IF`09.00 - 10.00 AM`Membicarakan Cliff`Kahim,Wakahim,Semua Kadep`Bawa Cemilan
-2015`4`2`Meeting`School Party`School`09.00-10.00 AM`Pesta Kelulusan`aku,kamu,dia`Dateng
+2015`1`19`Party`07.00-08.00 AM`B Party`B's Crib`Nigga`Gang`a
+2015`1`1`Party`10.30-11.30 AM`Alex's Party`Kos Alex`Alex's Birthday`Army Color`Don't Forget!
+2015`1`1`Party`09.30-10.00 AM`Bachelor Party`Kosan Cliff`Celebrating Cliff's 20 year of bachelorness`Casual`Bawa Cewe
+2015`1`1`Party`11.00-12.00 AM`Five Nights at Freddy's`Kos Freddy`Freddy's Birthday`Casual`A
+2015`1`2`Party`11.00-12.00 AM`BarQ Party`Ladang Jagung`Iseng`Cowboy`Bring Sausage
+2015`1`4`Party`09.00-10.00 AM`School Party`School`Pesta Kelulusan`Putih Abu-Abu`Dateng
+2015`2`1`Party`10.30-11.30 AM`Alex's Party`Kos Alex`Alex's Birthday`Army Color`Don't Forget!
+2015`3`1`Party`09.30-10.30 AM`Juan's Party`Kos Juan`Juan's Birthday`Pastel Color`Don't Forget!
+2015`3`2`Party`09.00-10.00 AM`School Party`School`Pesta Kelulusan`Putih Abu-Abu`Dateng
+2015`4`1`Party`11.00-11.30`April Mop`Selasar Basdat`April Mop`Jahim`AA
+2015`4`2`Meeting`09.00-10.00 AM`Rapat HMIF`Selasar TU IF`Membicarakan Cliff`Kahim,Wakahim,Semua Kadep`Bawa Cemilan
+2015`4`2`Meeting`09.00-10.00 AM`School Party`School`Pesta Kelulusan`aku,kamu,dia`Dateng
